@@ -1,11 +1,13 @@
 import os
 import csv
 
-csvpath = os.path.join('Resources', 'election_data.csv')
-outputpath = os.path.join('Analysis','election_analysis.txt')
+csvpath = 'HW\python-challenge\PyPoll\Resources\election_data.csv'
+outputpath = 'HW\python-challenge\PyPoll\Analysis\election_analysis.txt'
 
 total_votes = 0
-individual_votes = 0
+candidate_1_votes = 0
+candidate_2_votes = 0
+candidate_3_votes = 0
 candidates_list = []
 
 with open(csvpath) as csvfile:
@@ -16,28 +18,34 @@ with open(csvpath) as csvfile:
     total_votes = 1
     for rows in csvreader:
         total_votes += 1
-        voters = rows[0]
         candidate = str(rows[2])
         if candidate not in candidates_list:
             candidates_list.append(candidate)
-        
+        if candidate == candidates_list[0]:
+            candidate_1_votes += 1
+        elif candidate == candidates_list[1]:
+            candidate_2_votes += 1
+        else:
+            candidate_3_votes += 1
 
-    print(total_votes)    
-    print(candidates_list)
-
-
+    if candidate_1_votes > candidate_2_votes and candidate_1_votes > candidate_3_votes:
+        winner = candidates_list[0]
+    elif candidate_2_votes > candidate_1_votes and candidate_2_votes > candidate_3_votes:
+        winner = candidates_list[1]
+    else:
+        winner = candidates_list[2]
 
 output = (f'Election Results\n'
 f'-------------------------\n'
 f'Total Votes: {total_votes}\n'
 f'-------------------------\n'
-f'print(candidates_list[0]): 23.049% (85213)\n'
-f'print(candidates_list[1]): 73.812% (272892)\n'
-f'print(candidates_list[2]): 3.139% (11606)\n'
+f'{candidates_list[0]}: {round(candidate_1_votes * 100/total_votes, 2)}% ({candidate_1_votes})\n'
+f'{candidates_list[1]}: {round(candidate_2_votes * 100/total_votes, 2)}% ({candidate_2_votes})\n'
+f'{candidates_list[2]}: {round(candidate_3_votes * 100/total_votes, 2)}% ({candidate_3_votes})\n'
 f'-------------------------\n'
-f'Winner: Diana DeGette\n'
+f'Winner: {winner}\n'
 f'-------------------------')
 
-# print(output)
-# with open(outputpath, 'w') as f:
-#     f.write(output)
+print(output)
+with open(outputpath, 'w') as f:
+    f.write(output)
